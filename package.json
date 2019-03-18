@@ -31,6 +31,9 @@
     "type": "git",
     "url": "https://github.com/supremetechnopriest/react-idle-timer.git"
   },
+  "dependencies": {
+    "performance-now": "^2.1.0"
+  },
   "peerDependencies": {
     "prop-types": "^15.x.x",
     "react": "^16.x.x",

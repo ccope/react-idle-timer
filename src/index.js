@@ -12,6 +12,7 @@
 
 import { Component } from 'react'
 import PropTypes from 'prop-types'
+import now from 'performance-now'
 
 /**
  * Determine if we are in a browser
@@ -161,8 +162,8 @@ export default class IdleTimer extends Component {
    */
   state = {
     idle: false,
-    oldDate: +new Date(),
-    lastActive: +new Date(),
+    before: now(),
+    lastActive: now(),
     remaining: null,
     pageX: null,
     pageY: null
@@ -396,7 +397,7 @@ export default class IdleTimer extends Component {
     // Store when the user was last active
     // and update the mouse coordinates
     this.setState({
-      lastActive: +new Date(), // store when user was last active
+      lastActive: now(), // store when user was last active
       pageX: e.pageX, // update mouse coord
       pageY: e.pageY
     })
@@ -427,8 +428,8 @@ export default class IdleTimer extends Component {
     // Reset state
     this.setState({
       idle: false,
-      oldDate: +new Date(),
-      lastActive: this.state.oldDate,
+      before: now(),
+      lastActive: this.state.before,
       remaining: null
     })
 
@@ -504,7 +505,7 @@ export default class IdleTimer extends Component {
 
     // Determine remaining, if negative idle didn't finish flipping, just return 0
     const { timeout } = this.props
-    let timeLeft = timeout - ((+new Date()) - lastActive)
+    let timeLeft = timeout - (now() - lastActive)
     if (timeLeft < 0) {
       timeLeft = 0
     }
@@ -517,8 +518,8 @@ export default class IdleTimer extends Component {
    * @return {Timestamp}
    */
   _getElapsedTime () {
-    const { oldDate } = this.state
-    return (+new Date()) - oldDate
+    const { before } = this.state
+    return now() - before
   }
 
   /**
@@ -575,11 +576,11 @@ function debounced (fn, delay) {
 function throttled (fn, delay) {
   let lastCall = 0
   return function (...args) {
-    const now = (new Date).getTime()
-    if (now - lastCall < delay) {
+    const ts = now()
+    if (ts - lastCall < delay) {
       return
     }
-    lastCall = now
+    lastCall = ts
     return fn(...args)
   }
 }
