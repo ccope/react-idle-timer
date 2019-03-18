@@ -1,5 +1,6 @@
 import babel from 'rollup-plugin-babel'
 import builtins from 'rollup-plugin-node-builtins'
+import commonjs from 'rollup-plugin-commonjs'
 import globals from 'rollup-plugin-node-globals'
 import resolve from 'rollup-plugin-node-resolve'
 import minify from 'rollup-plugin-minify-es'
@@ -36,6 +37,11 @@ export default {
       module: true,
       preferBuiltins: true,
       browser: true
+    }),
+    commonjs({
+      namedExports: {
+        'node_modules/performance-now/lib/performance-now.js': ['now']
+      }
     }),
     builtins(),
     globals(),
